@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-Rational r1(2,4);
+Rational r1(2, 4);
 void test_plus()
 {
     Rational r1(1, 1);
@@ -50,10 +50,9 @@ bool compare()
     Rational r1(4, 8);
     Rational r2(1, 4);
 
-    bool res = r1 ==  r2;
+    bool res = r1 == r2;
     std::cout << res << '\n';
     return res;
-
 }
 int main()
 {
@@ -63,6 +62,6 @@ int main()
     test_invert();
     compare();
 
-    std::cout<< "n1:"<< r1 <<std::endl;
+    std::cout << "n1:" << r1 << std::endl;
     return 0;
 }
