@@ -3,37 +3,59 @@
 #include <algorithm>
 #include <cctype>
 
-template <typename T>
+
 class Messenger
 {
 protected:
-    T m_message;
+    std::string m_message;
 
 public:
-    Messenger(T m_message);
+    Messenger(std::string& m_message);
     virtual void encryption() = 0;
-    virtual void send() = 0;
+    virtual void send() ;
 };
 
-template <typename T>
-Messenger<T>::Messenger(T data)
+
+Messenger::Messenger( std::string& data)
     : m_message(data) {}
 
 template <typename T>
-class ROT13 : public Messenger<T>
+class Rotation : public Messenger
 {
 public:
-    ROT13(T m_message);
-    void encryption() override;
-    void send() override;
+    Rotation(std::string& data,const T& rotation);
+    void encryption();
+    void send();
+protected:
+    int m_rotation;
 };
 
-template <typename T>
-ROT13<T>::ROT13(T message)
-    : Messenger<T>(message) {}
+template<typename T>
+Rotation<T>::Rotation(std::string& data,const T& rotation)
+    : Messenger(data)
+    , m_rotation(rotation) {}
 
-template <typename T>
-void ROT13<T>::encryption()
+
+
+class ROT13 : public Rotation<int>
+{
+public:
+    ROT13(std::string m_message,const int& rotation);
+    void encryption() override;
+    void send() override;
+protected:
+    int m_rotation;    
+};
+
+
+ROT13::ROT13(std::string data,const int& rotation)
+    : Rotation(data,rotation) 
+    ,m_rotation(rotation){
+        std::cout << "hiii create rot 13" << std::endl;
+    }
+
+
+void ROT13::encryption()
 {
     std::transform(
         begin(this->m_message), end(this->m_message), begin(this->m_message),
@@ -47,27 +69,27 @@ void ROT13<T>::encryption()
         });
 }
 
-template <typename T>
-void ROT13<T>::send()
+
+void ROT13::send()
 {
     std::cout << "Sending   ROT13 encryption message:" << this->m_message << std::endl;
 }
 
-template <typename T>
-class Atbash : public Messenger<T>
+
+class Atbash : public Messenger
 {
 public:
-    Atbash(T m_message);
+    Atbash(std::string m_message);
     void encryption() override;
     void send() override;
 };
 
-template <typename T>
-Atbash<T>::Atbash(T message)
-    : Messenger<T>(message) {}
 
-template <typename T>
-void Atbash<T>::encryption()
+Atbash::Atbash(std::string message)
+    : Messenger(message) {}
+
+
+void Atbash::encryption()
 {
     std::transform(
         this->m_message.begin(), this->m_message.end(), this->m_message.begin(),
@@ -75,42 +97,72 @@ void Atbash<T>::encryption()
         {
             if (!std::isalpha(c))
             {
-                return c; 
+                return c;
             }
             char pivot = std::isupper(c) ? 'A' : 'a';
-            return char('Z' - (std::toupper(c) - pivot)); 
+            return char('Z' - (std::toupper(c) - pivot));
         });
 }
 
-template <typename T>
-void Atbash<T>::send()
+
+void Atbash::send()
 {
     std::cout << "Sending   Atbash encryption message:" << this->m_message << std::endl;
 }
 
-template <typename T>
-class UpperCase : public Messenger<T>
+class UpperCase : public Messenger
 {
 public:
-    UpperCase(T m_message);
+    UpperCase(std::string m_message);
     void encryption() override;
     void send() override;
 };
 
-template <typename T>
-UpperCase<T>::UpperCase(T message)
-    : Messenger<T>(message) {}
 
-template <typename T>
-void UpperCase<T>::encryption()
+UpperCase::UpperCase(std::string message)
+    : Messenger(message) {}
+
+
+void UpperCase::encryption()
 {
     std::transform(this->m_message.begin(), this->m_message.end(),
                    this->m_message.begin(),
                    toupper);
 }
 
-template <typename T>
-void UpperCase<T>::send()
+
+void UpperCase::send()
 {
     std::cout << "Sending   UpperCase encryption message:" << this->m_message << std::endl;
 }
+class Vigenere : public Rotation<std::string>
+{
+
+public:
+    Vigenere(std::string m_message,const std::string &key);
+    void encryption() override;
+    void send() override;
+protected:
+    std::string m_key;
+};
+
+
+
+//  Vigenere::Vigenere(std::string text, const std::string &key)
+//     : Messenger(text)
+//     , m_key(key)
+// {}
+// {
+//     std::transform(
+//         text.begin(), text.end(), text.begin(),
+//         [key](char c) -> char
+//         {
+//             if (!std::isalpha(c))
+//                 return c;
+
+//             char const pivot = std::isupper(c) ? 'A' : 'a';
+//             return char((c - pivot + key.at((c - pivot) % key.size())) % 26 + pivot);
+//         });
+
+//     std::cout << "Transformed text: " << text << std::endl;
+// }
