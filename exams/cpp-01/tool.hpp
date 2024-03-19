@@ -2,62 +2,81 @@
 #include <iostream>
 #include <vector>
 
+// I have two different options here, the one that is on ,
+//seems to be better...
+
+enum  ToolState {
+    READY,
+    MALFUNCTION
+};
 class Tool {
 public:
-    Tool(std::string name ="");
-    virtual ~Tool();
-    void malfunction();
-    void repair();
-    virtual void function() = 0;
-
+    virtual ~Tool() = default;
+    // virtual void useFunction() const = 0;
+    virtual std::string getName() const = 0;
+    virtual ToolState getState() const = 0; 
+    // virtual void setState(ToolState state) const =0;
+    void setState(const ToolState state) { m_state = state;}
+    void use();  
 protected:
-    std::string m_name;
-    bool m_state; 
+    ToolState m_state;
 };
-
 
 class LaserCutter : public Tool
 {
 public:
-    LaserCutter(std::string const &name, bool &status);
-    ~LaserCutter();
-    void function() override;
+    LaserCutter();
+    // void useFunction() const override;
+    std::string getName() const override {return m_name;};
+    ToolState getState() const override {return m_state;};
+    // void setState(ToolState state) const override;
+    
+
 private:
     std::string m_name;
-    bool m_state;
+    ToolState m_state;
 };
 
 class Disruptor : public Tool
 {
 public:
-    Disruptor(std::string const &name, bool &status);
-    ~Disruptor();
-    void function() override;
+    Disruptor();
+    // void useFunction() const override;
+    std::string getName() const override {return m_name;};
+    ToolState getState() const override {return m_state;};
+    // void setState(ToolState state) const override;
+
 private:
     std::string m_name;
-    bool m_state;
+    ToolState m_state;
 };
 
 class Replicator : public Tool
 {
 public:
-    Replicator(std::string const &name, bool &status);
-    ~Replicator();
-    void function() override;
+    Replicator();
+    // void useFunction() const override;
+    std::string getName() const override {return m_name;};
+    ToolState getState() const override {return m_state;};
+    // void setState(ToolState state) const override;
+
 private:
     std::string m_name;
-    bool m_state;    
+    ToolState m_state;    
 };
 
 class StaticBrush : public Tool
 {
 public:
-    StaticBrush(std::string const &name, bool &status);
-    ~StaticBrush();
-    void function() override;
+    StaticBrush();
+    // void useFunction() const override;
+    std::string getName() const override {return m_name;};
+    ToolState getState() const override {return m_state;};
+    // void setState(ToolState state) const override;
+
 private:
     std::string m_name;
-    bool m_state;
+    ToolState m_state;
 };
 
 
